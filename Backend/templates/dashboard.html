@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard | WorkSphere</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h2>Welcome, {{ user }} 👋</h2>
+
+  <p>Glad to see you! Ready to begin your day?</p>
+  
+  <!-- ✅ Button for Morning Emotional Check-In -->
+  <form action="{{ url_for('morning_questions') }}" method="GET">
+    <button type="submit">Start Morning Check-In</button>
+  </form>
+
+  <!-- 🔒 Optional: Logout Button -->
+  <form action="{{ url_for('logout') }}" method="GET" style="margin-top: 20px;">
+    <button type="submit">Logout</button>
+  </form>
+
+  <!-- JS file link -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

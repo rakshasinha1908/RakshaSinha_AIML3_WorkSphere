@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login | WorkSphere</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+  <h2>Welcome to WorkSphere</h2>
+  <form action="{{ url_for('dashboard') }}" method="POST">
+    <label for="email">Email:</label>
+    <input type="email" name="email" required>
+    <button type="submit">Login</button>
+  </form>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
