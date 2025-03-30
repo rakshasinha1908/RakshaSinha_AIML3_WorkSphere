@@ -11,8 +11,10 @@
   
   <!-- ✅ Button for Morning Emotional Check-In -->
   <form action="{{ url_for('morning_questions') }}" method="GET">
+    <input type="hidden" name="user" value="{{ user }}">
     <button type="submit">Start Morning Check-In</button>
   </form>
+  
 
   <!-- 🔒 Optional: Logout Button -->
   <form action="{{ url_for('logout') }}" method="GET" style="margin-top: 20px;">
