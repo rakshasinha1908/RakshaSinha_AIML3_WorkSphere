@@ -1,41 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Morning Check-In | WorkSphere</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Morning Check-In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        li {
+            margin-bottom: 20px;
+            list-style-type: none;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 5px;
+            width: 60%;
+        }
+        input[type="range"] {
+            width: 60%;
+        }
+        .slider-value {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-  <h2>Good Morning, {{ questions.user_name }} 👋</h2>
+    <h2>Good Morning 👋</h2>
+    <p>Let’s start your day with a quick check-in:</p>
 
-  <p>Let's start your day with a quick check-in:</p>
+    <form action="/submit_morning_checkin" method="POST">
+        <ul>
+        {% for question in questions %}
+            <li>
+                <label for="{{ question.id }}">{{ question.text }}</label><br>
+                {% if question.type == 'slider' %}
+                    <input type="range" id="{{ question.id }}" name="{{ question.id }}" min="1" max="10" value="5" oninput="updateSliderValue(this)">
+                    <span class="slider-value">5</span>
+                {% elif question.type == 'text' %}
+                    <input type="text" id="{{ question.id }}" name="{{ question.id }}" placeholder="Your response">
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+        <br>
+        <button type="submit">Submit Check-In</button>
+    </form>
 
-  <!-- Form to collect morning check-in responses -->
-  <form action="{{ url_for('submit_morning_checkin') }}" method="POST">
-    <ul>
-      <!-- Loop through the questions -->
-      {% for question in questions %}
-        <li>
-          <label>{{ question['text'] }}</label>
-
-          <!-- If it's a slider question -->
-          {% if question['type'] == 'slider' %}
-            <input type="range" min="1" max="10" name="{{ question['id'] }}" value="5">
-            <span>5</span> <!-- To display the slider value dynamically -->
-          
-          <!-- If it's a text-based question -->
-          {% elif question['type'] == 'text' %}
-            <input type="text" name="{{ question['id'] }}" placeholder="Your response">
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-
-    <!-- Submit button -->
-    <button type="submit">Submit Check-In</button>
-  </form>
-
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        function updateSliderValue(slider) {
+            const valueDisplay = slider.nextElementSibling;
+            valueDisplay.textContent = slider.value;
+        }
+    </script>
 </body>
 </html>
