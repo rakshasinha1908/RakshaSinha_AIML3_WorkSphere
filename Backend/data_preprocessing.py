@@ -37,7 +37,7 @@ def preprocess_answers(answers_dict):
         "Coding": 4,
         "Very much": 5,
     }
-
+ 
     features = []
     for q, a in answers_dict.items():
         features.append(mapping.get(a, 3))  # default = 3 (neutral)

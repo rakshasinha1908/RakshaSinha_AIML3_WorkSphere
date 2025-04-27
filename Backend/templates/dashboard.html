@@ -8,7 +8,7 @@
     :root {
       --bg-color: #f4f7fa;
       --sidebar-color: #2d3e50;
-      --text-color: #000;
+      --text-color: #000; 
       --card-bg: white;
       --button-bg: #c89b65;
       --todo-bg: #f0f0f0;
@@ -191,7 +191,8 @@
 </head>
 <body>
   <div class="sidebar">
-    <h1>Hello, Raksha!</h1>
+    <h1>Hello, {{ user }}!</h1>
+
     <img src="static/profile.jpg" alt="User Photo" />
     <p>SWE - III</p>
     <p>IT DEPARTMENT</p>
@@ -204,7 +205,7 @@
   
   <div class="main">
     <div class="card">
-      <h2>🌞 Good Morning, Raksha!</h2>
+      <h2>🌞 Good Morning, {{ user }}!</h2>
       <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
       <p>🕗 8:42 AM • Monday</p>
       <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">Start Morning CheckIn ➡</button>
@@ -219,7 +220,7 @@
       <ul class="todo-list" id="taskList"></ul>
     </div>
     <div class="card">
-      <h2>🌙 Good Evening, Raksha!</h2>
+      <h2>🌙 Good Evening, {{ user }}!</h2>
       <p>Take a moment to reflect and log your wellness score</p>
       <p>🕕 6:42 PM • Monday</p>
       <button class="button" onclick="window.open('http://localhost:8501', '_blank')">

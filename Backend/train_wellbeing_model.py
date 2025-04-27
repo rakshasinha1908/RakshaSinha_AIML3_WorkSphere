@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import pickle
 
 # Load the dataset
-df = pd.read_csv("D:\WorkSphere\dataset\sample_wellbeing_data.csv")
+df = pd.read_csv("D:\work\WorkSphere\dataset\sample_wellbeing_data.csv")
 
 X = df.drop(columns=["wellbeing_score"])
 y = df["wellbeing_score"]
