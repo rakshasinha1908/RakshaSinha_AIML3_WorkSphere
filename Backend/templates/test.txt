@@ -1,521 +1,3 @@
-1]
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wellness Dashboard</title>
-  <style>
-    :root {
-      --bg-color: #f4f7fa;
-      --sidebar-color: #2d3e50;
-      --text-color: #000;
-      --card-bg: white;
-      --button-bg: #c89b65;
-      --todo-bg: #f0f0f0;
-    }
-
-    body.dark {
-      --bg-color: #1f1f1f;
-      --sidebar-color: #121212;
-      --text-color: #fff;
-      --card-bg: #2b2b2b;
-      --button-bg: #8e6b3d;
-      --todo-bg: #333;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      height: 100vh;
-    }
-
-    .sidebar {
-      width: 25%;
-      background-color: var(--sidebar-color);
-      color: white;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sidebar img {
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar h1 {
-      font-size: 24px;
-    }
-
-    .sidebar p {
-      margin: 4px 0;
-    }
-
-    .mood-icons {
-      display: flex;
-      margin-top: 1rem;
-      gap: 0.5rem;
-    }
-
-    .mood-icons span {
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .dark-toggle {
-      margin-top: 1rem;
-      background: #ffffff20;
-      color: white;
-      border: 1px solid white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 1rem;
-      padding: 2rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .card h2 {
-      margin-top: 0;
-    }
-
-    .button {
-      background-color: var(--button-bg);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .todo-input {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .todo-input input {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .todo-input button {
-      padding: 0.5rem 1rem;
-      background-color: var(--sidebar-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-    }
-
-    .todo-list {
-      margin-top: 1rem;
-    }
-
-    .todo-item {
-      margin: 5px 0;
-      background: var(--todo-bg);
-      padding: 0.5rem;
-      border-radius: 6px;
-    }
-
-    canvas {
-      max-width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h1>Hello, Raksha!</h1>
-    <img src="https://i.imgur.com/HLfRr6t.jpg" alt="User Photo" />
-    <p>SWE - III</p>
-    <p>IT DEPARTMENT</p>
-    <p>How are you feeling today?</p>
-    <div class="mood-icons">
-      <span>😀</span><span>🙂</span><span>😐</span><span>☹</span><span>😢</span>
-    </div>
-    <button class="dark-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-  </div>
-  <div class="main">
-    <div class="card">
-      <h2>🌞 Good Morning, Raksha!</h2>
-      <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
-      <p>🕗 8:42 AM • Monday</p>
-      <button class="button">Start Morning CheckIn ➡</button>
-    </div>
-    <div class="card">
-      <h2>To-Do List</h2>
-      <div class="todo-input">
-        <input type="text" id="taskInput" placeholder="Add a new task">
-        <button onclick="addTask()">Add</button>
-      </div>
-      <div class="todo-list" id="todoList"></div>
-    </div>
-    <div class="card">
-      <h2>🌙 Good Evening, Raksha!</h2>
-      <p>Take a moment to reflect and log your wellness score</p>
-      <p>🕕 6:42 PM • Monday</p>
-      <button class="button">Start Evening CheckOut 📝</button>
-    </div>
-    <div class="card">
-      <canvas id="wellnessChart"></canvas>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctx = document.getElementById('wellnessChart');
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Needs Improvement', 'Healthy'],
-        datasets: [{
-          label: 'Wellness Score',
-          data: [18, 82],
-          backgroundColor: ['#397ca7', '#8cd3f8']
-        }]
-      },
-    });
-
-    function addTask() {
-      const taskInput = document.getElementById('taskInput');
-      const task = taskInput.value.trim();
-      if (task !== '') {
-        const taskList = document.getElementById('todoList');
-        const taskItem = document.createElement('div');
-        taskItem.className = 'todo-item';
-        taskItem.textContent = task;
-        taskList.appendChild(taskItem);
-        taskInput.value = '';
-      }
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-    }
-  </script>
-</body>
-</html>
-
-2] 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wellness Dashboard</title>
-  <style>
-    :root {
-      --bg-color: #f4f7fa;
-      --sidebar-color: #2d3e50;
-      --text-color: #000;
-      --card-bg: white;
-      --button-bg: #c89b65;
-      --todo-bg: #f0f0f0;
-    }
-
-    body.dark {
-      --bg-color: #1f1f1f;
-      --sidebar-color: #121212;
-      --text-color: #fff;
-      --card-bg: #2b2b2b;
-      --button-bg: #8e6b3d;
-      --todo-bg: #333;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      height: 100vh;
-    }
-
-    .sidebar {
-      width: 25%;
-      background-color: var(--sidebar-color);
-      color: white;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sidebar img {
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar h1 {
-      font-size: 24px;
-    }
-
-    .sidebar p {
-      margin: 4px 0;
-    }
-
-    .mood-icons {
-      display: flex;
-      margin-top: 1rem;
-      gap: 0.5rem;
-    }
-
-    .mood-icons span {
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .dark-toggle {
-      margin-top: 1rem;
-      background: #ffffff20;
-      color: white;
-      border: 1px solid white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 1rem;
-      padding: 2rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .card h2 {
-      margin-top: 0;
-    }
-
-    .button {
-      background-color: var(--button-bg);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .todo-input {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .todo-input input {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .todo-input button {
-      padding: 0.5rem 1rem;
-      background-color: var(--sidebar-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-    }
-
-    .todo-list {
-      margin-top: 1rem;
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .task-item {
-      background: var(--todo-bg);
-      padding: 0.5rem;
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .task-item.completed span {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
-
-    .task-item button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-left: 0.5rem;
-      color: var(--text-color);
-    }
-
-    canvas {
-      max-width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h1>Hello, Raksha!</h1>
-    <img src="static/profile.jpg" alt="User Photo" />
-    <p>SWE - III</p>
-    <p>IT DEPARTMENT</p>
-    <p>How are you feeling today?</p>
-    <div class="mood-icons">
-      <span>😀</span><span>🙂</span><span>😐</span><span>☹</span><span>😢</span>
-    </div>
-    <button class="dark-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-  </div>
-  <div class="main">
-    <div class="card">
-      <h2>🌞 Good Morning, Raksha!</h2>
-      <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
-      <p>🕗 8:42 AM • Monday</p>
-      <button class="button">Start Morning CheckIn ➡</button>
-    </div>
-    <div class="card">
-      <h2>To-Do List</h2>
-      <div class="todo-input">
-        <input type="text" id="taskInput" placeholder="Add a new task">
-        <button onclick="addTask()">Add</button>
-      </div>
-      <ul class="todo-list" id="taskList"></ul>
-    </div>
-    <div class="card">
-      <h2>🌙 Good Evening, Raksha!</h2>
-      <p>Take a moment to reflect and log your wellness score</p>
-      <p>🕕 6:42 PM • Monday</p>
-      <button class="button">Start Evening CheckOut 📝</button>
-    </div>
-    <div class="card">
-      <canvas id="wellnessChart"></canvas>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctx = document.getElementById('wellnessChart');
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Needs Improvement', 'Healthy'],
-        datasets: [{
-          label: 'Wellness Score',
-          data: [18, 82],
-          backgroundColor: ['#397ca7', '#8cd3f8']
-        }]
-      },
-    });
-
-    // To-Do Logic
-    function addTask() {
-      const taskInput = document.getElementById('taskInput');
-      const taskText = taskInput.value.trim();
-      if (taskText === '') return;
-
-      const taskList = document.getElementById('taskList');
-      const li = document.createElement('li');
-      li.className = 'task-item';
-
-      const span = document.createElement('span');
-      span.textContent = taskText;
-
-      const checkBtn = document.createElement('button');
-      checkBtn.innerHTML = '✅';
-      checkBtn.onclick = () => li.classList.toggle('completed');
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.innerHTML = '🗑️';
-      deleteBtn.onclick = () => li.remove();
-
-      li.appendChild(span);
-      li.appendChild(checkBtn);
-      li.appendChild(deleteBtn);
-      taskList.appendChild(li);
-      taskInput.value = '';
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-    }
-  </script>
-</body>
-</html>
-
-question_logic.py]
-import random
-
-# 🧠 List of meaningful morning questions with metadata
-MORNING_QUESTIONS = [
-    {"id": "q1", "text": "What's one thing you're looking forward to today?", "type": "text"},
-    {"id": "q2", "text": "Is there any support you need from your team or manager today?", "type": "text"},
-    {"id": "q3", "text": "How would you describe your energy levels this morning?", "type": "slider"},
-    {"id": "q4", "text": "Are there any blockers that might affect your productivity today?", "type": "text"},
-    {"id": "q5", "text": "What's your top priority task for today?", "type": "text"},
-    {"id": "q6", "text": "How motivated do you feel to work today?", "type": "slider"},
-    {"id": "q7", "text": "How well did you sleep last night?", "type": "slider"},
-    {"id": "q8", "text": "Is there something you're anxious or excited about today?", "type": "text"},
-    {"id": "q9", "text": "What can make today a good day for you?", "type": "text"},
-    {"id": "q10", "text": "Are you facing any personal distractions today?", "type": "text"},
-    {"id": "q11", "text": "How confident are you feeling about achieving your goals today?", "type": "slider"},
-    {"id": "q12", "text": "Is there any feedback you’d like to share from yesterday?", "type": "text"},
-    {"id": "q13", "text": "What’s your intention or focus for today?", "type": "text"},
-    {"id": "q14", "text": "Do you feel connected with your work and team today?", "type": "slider"},
-    {"id": "q15", "text": "Is there anything you’d like to improve in your daily routine?", "type": "text"}
-]
-
-def get_morning_questions(user_name=None):
-    """
-    Returns 3–4 random morning questions as dictionaries.
-    Optionally adds the user's name to personalize.
-    """
-    selected_questions = random.sample(MORNING_QUESTIONS, k=random.choice([3, 4]))
-
-    if user_name:
-        for q in selected_questions:
-            if q["text"].startswith("What's") or q["text"].startswith("What’s"):
-                q["text"] = f"{user_name}, {q['text']}"
-
-    return selected_questions
-
-morning_questions.html]
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -523,1014 +5,130 @@ morning_questions.html]
     <title>Morning Check-In</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         h2 {
-            color: #333;
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form#checkin-form {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        ul {
+            padding-left: 0;
+            list-style-type: none;
+            margin-bottom: 20px;
         }
         li {
-            margin-bottom: 20px;
-            list-style-type: none;
+            margin-bottom: 15px;
         }
         label {
-            font-weight: bold;
-        }
-        input[type="text"] {
-            padding: 5px;
-            width: 60%;
-        }
-        input[type="range"] {
-            width: 60%;
-        }
-        .slider-value {
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        button {
-            padding: 8px 16px;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <h2>Good Morning 👋</h2>
-    <p>Let’s start your day with a quick check-in:</p>
-
-    <form action="/submit_morning_checkin" method="POST">
-        <ul>
-        {% for question in questions %}
-            <li>
-                <label for="{{ question.id }}">{{ question.text }}</label><br>
-                {% if question.type == 'slider' %}
-                    <input type="range" id="{{ question.id }}" name="{{ question.id }}" min="1" max="10" value="5" oninput="updateSliderValue(this)">
-                    <span class="slider-value">5</span>
-                {% elif question.type == 'text' %}
-                    <input type="text" id="{{ question.id }}" name="{{ question.id }}" placeholder="Your response">
-                {% endif %}
-            </li>
-        {% endfor %}
-        </ul>
-        <br>
-        <button type="submit">Submit Check-In</button>
-    </form>
-
-    <script>
-        function updateSliderValue(slider) {
-            const valueDisplay = slider.nextElementSibling;
-            valueDisplay.textContent = slider.value;
-        }
-    </script>
-</body>
-</html>
-
-app.py - 21.04.2025
-# from flask import Flask, request, jsonify, render_template, redirect, url_for
-# import numpy as np
-# import pickle
-# from flask_cors import CORS
-# from question_logic import get_morning_questions
-# import re  # For email validation
-
-# app = Flask(__name__)
-# CORS(app)
-
-# # Load trained model
-# with open("D:/WorkSphere/Backend/wellness_model.pkl", "rb") as f:
-#     reg_model = pickle.load(f)
-
-# # 🔒 Dummy users - replace with DB later
-# users = {
-#     "user@example.com": "User123",
-#     "rakshasinha1908@gmail.com": "raksha19"
-# }
-
-# # ----------------- ROUTES ------------------
-
-# # Email validation function
-# def is_valid_email(email):
-#     # Regular expression to validate email format
-#     pattern = r'^[\w\.-]+@[\w\.-]+\.\w{2,4}$'
-#     return re.match(pattern, email)
-
-# @app.route('/')
-# def home():
-#     return redirect(url_for('login'))
-
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
-
-# @app.route('/dashboard', methods=['POST'])
-# def dashboard():
-#     email = request.form.get("email")
-
-#     # ✅ Regex to validate email format
-#     if re.match(r"[^@]+@[^@]+\.[^@]+", email):
-#         return render_template('dashboard.html', user=email)
-#     else:
-#         return "❌ Invalid Email Format. Please go back and try again."
-
-# @app.route('/morning-checkin')
-# def morning_questions():
-#     # ✅ Get user from query parameter
-#     user_email = request.args.get("user")
-#     if not user_email:
-#         return "User email not provided", 400
-    
-#     questions = get_morning_questions(user_name=user_email.split("@")[0].capitalize())
-#     return render_template('morning_questions.html', questions=questions)
-
-# @app.route('/submit_morning_checkin', methods=['POST'])
-# def submit_morning_checkin():
-#     user_responses = request.form.to_dict()
-#     print("📥 Received Responses:", user_responses)  # For debugging
-
-#     # You can store/analyze/save responses here
-#     return "✅ Morning Check-In Submitted! Thank you."
-
-# @app.route('/logout')
-# def logout():
-#     return render_template('logout.html')
-
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     data = request.json
-#     print("📥 Received Data:", data)
-
-#     try:
-#         workload = float(data.get("Workload"))
-#         task_complexity = float(data.get("Task Complexity"))
-#         break_duration = float(data.get("Break Duration (mins)", data.get("Break Duration")))
-#         overtime = float(data.get("Overtime Hours", data.get("Overtime")))
-
-#         input_data = np.array([[workload, task_complexity, break_duration, overtime]])
-#         predicted_score = reg_model.predict(input_data)[0]
-#         predicted_score = round(predicted_score, 2)
-#         predicted_score = max(min(predicted_score, 100), 0)
-
-#         return jsonify({"Wellness Score": predicted_score})
-    
-#     except Exception as e:
-#         print("❌ Error in prediction:", str(e))
-#         return jsonify({"error": str(e)}), 500
-
-# # ----------------- RUN ------------------
-
-# if __name__ == "__main__":
-#     app.run(debug=True, port=5001)
-
-
-# from flask import Flask, request, jsonify, render_template, redirect, url_for
-# import numpy as np
-# import pickle
-# from flask_cors import CORS
-# from question_logic import get_morning_questions
-# import re  # For email validation
-
-# app = Flask(__name__)
-# CORS(app)
-
-# # Load trained workload-wellness model
-# with open("D:/WorkSphere/Backend/wellness_model.pkl", "rb") as f:
-#     reg_model = pickle.load(f)
-
-# # 🔒 Dummy users - replace with DB later
-# users = {
-#     "user@example.com": "User123",
-#     "rakshasinha1908@gmail.com": "raksha19"
-# }
-
-# # ----------------- ROUTES ------------------
-
-# # Email validation function
-# def is_valid_email(email):
-#     # Regular expression to validate email format
-#     pattern = r'^[\w\.-]+@[\w\.-]+\.\w{2,4}$'
-#     return re.match(pattern, email)
-
-# @app.route('/')
-# def home():
-#     return redirect(url_for('login'))
-
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
-
-# @app.route('/dashboard', methods=['POST'])
-# def dashboard():
-#     email = request.form.get("email")
-
-#     # ✅ Regex to validate email format
-#     if re.match(r"[^@]+@[^@]+\.[^@]+", email):
-#         return render_template('dashboard.html', user=email)
-#     else:
-#         return "❌ Invalid Email Format. Please go back and try again."
-
-# @app.route('/morning-checkin')
-# def morning_questions():
-#     # ✅ Get user from query parameter
-#     user_email = request.args.get("user")
-#     if not user_email:
-#         return "User email not provided", 400
-
-#     questions = get_morning_questions(user_name=user_email.split("@")[0].capitalize())
-#     return render_template('morning_questions.html', questions=questions)
-
-# @app.route('/submit_morning_checkin', methods=['POST'])
-# def submit_morning_checkin():
-#     user_responses = request.form.to_dict()
-#     print("📥 Received Responses:", user_responses)  # For debugging
-
-#     try:
-#         # 🧠 Preprocess the answers
-#         from data_preprocessing import preprocess_answers
-#         features = preprocess_answers(user_responses)
-
-#         # 📊 Load emotional wellbeing model
-#         with open("D:/WorkSphere/Backend/wellbeing_model.pkl", "rb") as f:
-#             model = pickle.load(f)
-
-#         # 🤖 Predict the wellbeing score
-#         input_data = np.array(features).reshape(1, -1)
-#         predicted_score = model.predict(input_data)[0]
-#         predicted_score = round(predicted_score)
-#         predicted_score = max(min(predicted_score, 100), 0)
-
-#         # ✅ Return the response with score
-#         return f"✅ Morning Check-In Submitted! Thank you. Your Emotional Wellbeing Score is: {predicted_score}"
-
-#     except Exception as e:
-#         print("❌ Prediction Error:", str(e))
-#         return f"❌ Error while predicting wellbeing score: {str(e)}"
-
-# @app.route('/logout')
-# def logout():
-#     return render_template('logout.html')
-
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     data = request.json
-#     print("📥 Received Data:", data)
-
-#     try:
-#         workload = float(data.get("Workload"))
-#         task_complexity = float(data.get("Task Complexity"))
-#         break_duration = float(data.get("Break Duration (mins)", data.get("Break Duration")))
-#         overtime = float(data.get("Overtime Hours", data.get("Overtime")))
-
-#         input_data = np.array([[workload, task_complexity, break_duration, overtime]])
-#         predicted_score = reg_model.predict(input_data)[0]
-#         predicted_score = round(predicted_score, 2)
-#         predicted_score = max(min(predicted_score, 100), 0)
-
-#         return jsonify({"Wellness Score": predicted_score})
-
-#     except Exception as e:
-#         print("❌ Error in prediction:", str(e))
-#         return jsonify({"error": str(e)}), 500
-
-# # ----------------- RUN ------------------
-
-# if __name__ == "__main__":
-#     app.run(debug=True, port=5001)
-
-
-from flask import Flask, request, jsonify, render_template, redirect, url_for
-import numpy as np
-import pickle
-from flask_cors import CORS
-from question_logic import get_morning_questions, MORNING_QUESTIONS
-import re  # For email validation
-
-app = Flask(__name__)
-CORS(app)
-
-# Load trained workload-wellness model
-with open("D:/WorkSphere/Backend/wellness_model.pkl", "rb") as f:
-    reg_model = pickle.load(f)
-
-# 🔒 Dummy users - replace with DB later
-users = {
-    "user@example.com": "User123",
-    "rakshasinha1908@gmail.com": "raksha19"
-}
-
-# ----------------- ROUTES ------------------
-
-# Email validation function
-def is_valid_email(email):
-    # Regular expression to validate email format
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w{2,4}$'
-    return re.match(pattern, email)
-
-@app.route('/')
-def home():
-    return redirect(url_for('login'))
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/dashboard', methods=['POST'])
-def dashboard():
-    email = request.form.get("email")
-
-    # ✅ Regex to validate email format
-    if re.match(r"[^@]+@[^@]+\.[^@]+", email):
-        return render_template('dashboard.html', user=email)
-    else:
-        return "❌ Invalid Email Format. Please go back and try again."
-
-@app.route('/morning-checkin')
-def morning_questions():
-    # ✅ Get user from query parameter
-    user_email = request.args.get("user")
-    if not user_email:
-        return "User email not provided", 400
-
-    questions = get_morning_questions(user_name=user_email.split("@")[0].capitalize())
-    return render_template('morning_questions.html', questions=questions)
-
-@app.route('/submit_morning_checkin', methods=['POST'])
-def submit_morning_checkin():
-    user_responses = request.form.to_dict()
-    print("📥 Received Responses:", user_responses)  # For debugging
-
-    try:
-        from data_preprocessing import preprocess_answers
-
-        # Step 1: Make sure all 15 question IDs are represented
-        all_ids = [q["id"] for q in MORNING_QUESTIONS]
-        default_values = {
-            "slider": 5,  # Neutral
-            "dropdown": "No"  # Default option for missing dropdown
-        }
-
-        # Step 2: Fill missing answers
-        full_response = {}
-        for q in MORNING_QUESTIONS:
-            qid = q["id"]
-            if qid in user_responses:
-                full_response[qid] = user_responses[qid]
-            else:
-                if q["type"] == "slider":
-                    full_response[qid] = default_values["slider"]
-                elif q["type"] == "dropdown":
-                    full_response[qid] = q["options"][0]  # Default to first option
-
-        print("🧾 Full Responses (with defaults):", full_response)
-
-        # Step 3: Preprocess & Predict
-        features = preprocess_answers(full_response)
-
-        with open("D:/WorkSphere/Backend/wellbeing_model.pkl", "rb") as f:
-            model = pickle.load(f)
-
-        input_data = np.array(features).reshape(1, -1)
-        predicted_score = model.predict(input_data)[0]
-        predicted_score = round(predicted_score)
-        predicted_score = max(min(predicted_score, 100), 0)
-
-        return f"✅ Morning Check-In Submitted! Your Emotional Wellbeing Score is: {predicted_score}"
-
-    except Exception as e:
-        print("❌ Prediction Error:", str(e))
-        return f"❌ Error while predicting wellbeing score: {str(e)}"
-
-@app.route('/logout')
-def logout():
-    return render_template('logout.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    data = request.json
-    print("📥 Received Data:", data)
-
-    try:
-        workload = float(data.get("Workload"))
-        task_complexity = float(data.get("Task Complexity"))
-        break_duration = float(data.get("Break Duration (mins)", data.get("Break Duration")))
-        overtime = float(data.get("Overtime Hours", data.get("Overtime")))
-
-        input_data = np.array([[workload, task_complexity, break_duration, overtime]])
-        predicted_score = reg_model.predict(input_data)[0]
-        predicted_score = round(predicted_score, 2)
-        predicted_score = max(min(predicted_score, 100), 0)
-
-        return jsonify({"Wellness Score": predicted_score})
-
-    except Exception as e:
-        print("❌ Error in prediction:", str(e))
-        return jsonify({"error": str(e)}), 500
-
-# ----------------- RUN ------------------
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
-
-26-04-2025
-
-from flask import Flask, request, jsonify, render_template, redirect, url_for
-import numpy as np
-import pickle
-from flask_cors import CORS
-from flask_mysqldb import MySQL
-from question_logic import get_morning_questions, MORNING_QUESTIONS
-import re  # For email validation
-from werkzeug.security import generate_password_hash, check_password_hash  # For password hashing
-
-app = Flask(__name__)
-CORS(app)
-
-# ✅ MySQL Config
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '123456'
-app.config['MYSQL_DB'] = 'wellness_db'
-
-mysql = MySQL(app)
-
-# Load trained workload-wellness model
-with open("D:/WorkSphere/Backend/wellness_model.pkl", "rb") as f:
-    reg_model = pickle.load(f)
-
-# ----------------- ROUTES ------------------
-
-# Email validation function
-def is_valid_email(email):
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w{2,4}$'
-    return re.match(pattern, email)
-
-@app.route('/')
-def home():
-    return redirect(url_for('login'))
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/dashboard', methods=['POST'])
-def dashboard():
-    email = request.form.get('email').strip()
-    print(f"Form email: >{email}<") #check 
-    password = request.form.get("password")
-
-    print(f"🔍 Email entered: {email}")
-
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-        return "❌ Invalid Email Format. Please go back and try again."
-
-    try:
-        cursor = mysql.connection.cursor()
-
-        # Add these debug print statements
-        print(f"Checking email: {email}")  # Print the email you're going to search for
-        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-        user = cursor.fetchone()
-
-        # Add this print statement to see the retrieved user
-        print(f"Retrieved user: {user}")
-
-        cursor.close()
-
-        if user:
-            stored_password_hash = user[3]  # password is at index 3
-            if stored_password_hash == password:  # plain text comparison
-                return render_template('dashboard.html', user=email)
-            else:
-                return "❌ Incorrect Password."
-        else:
-            return "❌ User not found."
-
-    except Exception as e:
-        return f"❌ Database Error: {str(e)}"
-
-@app.route('/morning-checkin')
-def morning_questions():
-    user_email = request.args.get("user")
-    if not user_email:
-        return "User email not provided", 400
-
-    questions = get_morning_questions(user_name=user_email.split("@")[0].capitalize())
-    return render_template('morning_questions.html', questions=questions)
-
-@app.route('/submit_morning_checkin', methods=['POST'])
-def submit_morning_checkin():
-    user_responses = request.form.to_dict()
-    print("📥 Received Responses:", user_responses)
-
-    try:
-        from data_preprocessing import preprocess_answers
-
-        all_ids = [q["id"] for q in MORNING_QUESTIONS]
-        default_values = {
-            "slider": 5,
-            "dropdown": "No"
-        }
-
-        full_response = {}
-        for q in MORNING_QUESTIONS:
-            qid = q["id"]
-            if qid in user_responses:
-                full_response[qid] = user_responses[qid]
-            else:
-                if q["type"] == "slider":
-                    full_response[qid] = default_values["slider"]
-                elif q["type"] == "dropdown":
-                    full_response[qid] = q["options"][0]
-
-        print("🧾 Full Responses (with defaults):", full_response)
-
-        features = preprocess_answers(full_response)
-
-        with open("D:/WorkSphere/Backend/wellbeing_model.pkl", "rb") as f:
-            model = pickle.load(f)
-
-        input_data = np.array(features).reshape(1, -1)
-        predicted_score = model.predict(input_data)[0]
-        predicted_score = round(predicted_score)
-        predicted_score = max(min(predicted_score, 100), 0)
-
-        return f"✅ Morning Check-In Submitted! Your Emotional Wellbeing Score is: {predicted_score}"
-
-    except Exception as e:
-        print("❌ Prediction Error:", str(e))
-        return f"❌ Error while predicting wellbeing score: {str(e)}"
-
-@app.route('/logout')
-def logout():
-    return render_template('logout.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    data = request.json
-    print("📥 Received Data:", data)
-
-    try:
-        workload = float(data.get("Workload"))
-        task_complexity = float(data.get("Task Complexity"))
-        break_duration = float(data.get("Break Duration (mins)", data.get("Break Duration")))
-        overtime = float(data.get("Overtime Hours", data.get("Overtime")))
-
-        input_data = np.array([[workload, task_complexity, break_duration, overtime]])
-        predicted_score = reg_model.predict(input_data)[0]
-        predicted_score = round(predicted_score, 2)
-        predicted_score = max(min(predicted_score, 100), 0)
-
-        return jsonify({"Wellness Score": predicted_score})
-
-    except Exception as e:
-        print("❌ Error in prediction:", str(e))
-        return jsonify({"error": str(e)}), 500
-
-# ✅ Corrected register route
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = generate_password_hash(password)
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", 
-                       (username, email, hashed_password))
-        mysql.connection.commit()
-        cursor.close()
-        return '✅ User registered successfully!'
-    
-    return '''
-        <form method="POST">
-            Username: <input type="text" name="username"><br>
-            Email: <input type="email" name="email"><br>
-            Password: <input type="password" name="password"><br>
-            <input type="submit" value="Register">
-        </form>
-    '''
-
-# Run the app
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)
-
-26-04-2025
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login | WorkSphere</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-  <h2>Welcome to WorkSphere</h2>
-  <form action="{{ url_for('dashboard') }}" method="POST">
-    <label for="email">Email:</label>
-    <input type="email" name="email" required>
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" required>
-
-    <button type="submit">Login</button>
-  </form>
-
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
-
-28th april dashboard.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wellness Dashboard</title>
-  <style>
-    :root {
-      --bg-color: #f4f7fa;
-      --sidebar-color: #2d3e50;
-      --text-color: #000; 
-      --card-bg: white;
-      --button-bg: #c89b65;
-      --todo-bg: #f0f0f0;
-    }
-
-    body.dark {
-      --bg-color: #1f1f1f;
-      --sidebar-color: #121212;
-      --text-color: #fff;
-      --card-bg: #2b2b2b;
-      --button-bg: #8e6b3d;
-      --todo-bg: #333;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      height: 100vh;
-      overflow: hidden; /* prevent scrolling */
-    }
-
-    .sidebar {
-      width: 24%;
-      background-color: var(--sidebar-color);
-      color: white;
-      padding: 1.8rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-sizing: border-box;
-    }
-
-    .sidebar img {
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar h1 {
-      font-size: 22px;
-    }
-
-    .sidebar p {
-      margin: 4px 0;
-    }
-
-    .mood-icons {
-      display: flex;
-      margin-top: 1rem;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .mood-icons span {
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    .dark-toggle {
-      margin-top: 1rem;
-      background: #ffffff20;
-      color: white;
-      border: 1px solid white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 1rem;
-      padding: 1.8rem;
-      box-sizing: border-box;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
-    }
-
-    .button {
-      background-color: var(--button-bg);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.95rem;
-      margin-top: 0.8rem;
-    }
-
-    .todo-input {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .todo-input input {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .todo-input button {
-      padding: 0.5rem 1rem;
-      background-color: var(--sidebar-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .todo-list {
-      margin-top: 1rem;
-      list-style: none;
-      padding-left: 0;
-      overflow-y: auto;
-      max-height: 120px;
-    }
-
-    .task-item {
-      background: var(--todo-bg);
-      padding: 0.5rem;
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .task-item.completed span {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
-
-    .task-item button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-left: 0.5rem;
-      color: var(--text-color);
-    }
-
-    .card:last-child {
-      padding: 0.5rem;
-      overflow: hidden;
-      align-items: center;
-      justify-content: center;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h1>Hello, {{ user }}!</h1>
-
-    <img src="static/profile.jpg" alt="User Photo" />
-    <p>SWE - III</p>
-    <p>IT DEPARTMENT</p>
-    <p>How are you feeling today?</p>
-    <div class="mood-icons">
-      <span>😀</span><span>🙂</span><span>😐</span><span>☹</span><span>😢</span>
-    </div>
-    <button class="dark-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-  </div>
-  
-  <div class="main">
-    <div class="card">
-      <h2>🌞 Good Morning, {{ user }}!</h2>
-      <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
-      <p>🕗 8:42 AM • Monday</p>
-      <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">Start Morning CheckIn ➡</button>
-
-    </div>
-    <div class="card">
-      <h2>To-Do List</h2>
-      <div class="todo-input">
-        <input type="text" id="taskInput" placeholder="Add a new task">
-        <button onclick="addTask()">Add</button>
-      </div>
-      <ul class="todo-list" id="taskList"></ul>
-    </div>
-    <div class="card">
-      <h2>🌙 Good Evening, {{ user }}!</h2>
-      <p>Take a moment to reflect and log your wellness score</p>
-      <p>🕕 6:42 PM • Monday</p>
-      <button class="button" onclick="window.open('http://localhost:8501', '_blank')">
-        Start Evening CheckOut 📝
-      </button>
-    </div>
-    <div class="card">
-      <canvas id="wellnessChart"></canvas>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // Function to fetch scores
-    async function fetchScores() {
-      const email = "{{ user }}"; // Pass the user email here
-      const response = await fetch(`/get_scores?email=${email}`);
-      const data = await response.json();
-      if (data.emotional_score && data.mental_score) {
-        const emotional = data.emotional_score.score;  // Assuming score field holds the value
-        const mental = data.mental_score.score;
-        updateChart(emotional, mental);
-      }
-    }
-
-    // Update chart with the fetched data
-    function updateChart(emotionalScore, mentalScore) {
-      const ctx = document.getElementById('wellnessChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['Needs Improvement', 'Healthy'],
-          datasets: [{
-            label: 'Wellness Score',
-            data: [100 - emotionalScore, emotionalScore],  // Assuming emotional score is in percentage
-            backgroundColor: ['#397ca7', '#8cd3f8']
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      });
-    }
-
-    // Call fetchScores when the page loads
-    fetchScores();
-
-    function addTask() {
-      const taskInput = document.getElementById('taskInput');
-      const taskText = taskInput.value.trim();
-      if (taskText === '') return;
-
-      const taskList = document.getElementById('taskList');
-      const li = document.createElement('li');
-      li.className = 'task-item';
-
-      const span = document.createElement('span');
-      span.textContent = taskText;
-
-      const checkBtn = document.createElement('button');
-      checkBtn.innerHTML = '✅';
-      checkBtn.onclick = () => li.classList.toggle('completed');
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.innerHTML = '🗑️';
-      deleteBtn.onclick = () => li.remove();
-
-      li.appendChild(span);
-      li.appendChild(checkBtn);
-      li.appendChild(deleteBtn);
-      taskList.appendChild(li);
-      taskInput.value = '';
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-    }
-  </script>
-</body>
-</html>
-
-28-04-25 login 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login | WorkSphere</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-  <h2>Welcome to WorkSphere</h2>
-  <form action="{{ url_for('login') }}" method="POST">  <!-- ✅ FIXED -->
-    <label for="email">Email:</label>
-    <input type="email" name="email" required>
-    
-    <label for="password">Password:</label>   <!-- ✅ PASSWORD bhi chahiye -->
-    <input type="password" name="password" required>
-    
-    <button type="submit">Login</button>
-  </form>
-
-  <p>Don't have an account? <a href="/register">Register here</a></p>
-
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
-
-28-04-25 register 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST">
-        <input type="text" name="name" placeholder="Enter Name" required><br><br>
-        <input type="email" name="email" placeholder="Enter Email" required><br><br>
-        <input type="password" name="password" placeholder="Enter Password" required><br><br>
-        <button type="submit">Register</button>
-    </form>
-    
-
-    <p>Already have an account? <a href="/login">Login here</a></p>
-</body>
-</html>
-
-morning_questions.htl 28 april 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Morning Check-In</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h2 {
-            color: #333;
-        }
-        li {
-            margin-bottom: 20px;
-            list-style-type: none;
-        }
-        label {
-            font-weight: bold;
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 8px;
         }
         input[type="range"] {
-            width: 60%;
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+        input[type="range"]:hover {
+            background: #3498db;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
         }
         .slider-value {
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        button {
-            padding: 8px 16px;
-            font-size: 16px;
+            font-weight: 600;
+            color: #3498db;
+            margin-top: 5px;
         }
         select {
-            padding: 5px;
-            width: 60%;
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border 0.3s ease;
+        }
+        select:focus {
+            border-color: #3498db;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .button-group a button {
+            background-color: #95a5a6;
+        }
+        .button-group a button:hover {
+            background-color: #7f8c8d;
+        }
+        #prediction-result {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
         }
     </style>
 </head>
@@ -1538,7 +136,8 @@ morning_questions.htl 28 april
     <h2>Good Morning 👋</h2>
     <p>Let’s start your day with a quick check-in:</p>
 
-    <form action="/submit_morning_checkin" method="POST">
+    <form id="checkin-form">
+        <input type="hidden" name="email" value="{{ user_email }}">
         <ul>
         {% for question in questions %}
             <li>
@@ -1556,15 +155,611 @@ morning_questions.htl 28 april
             </li>
         {% endfor %}
         </ul>
-        <br>
-        <button type="submit">Submit Check-In</button>
+        
+        <div class="button-group">
+            <button type="submit">Submit Check-In</button>
+            <a href="/dashboard?user={{ user_email }}">
+                <button type="button">Go Back to Dashboard</button>
+            </a>
+        </div>
     </form>
+
+    <div id="prediction-result"></div>
 
     <script>
         function updateSliderValue(slider) {
             const valueDisplay = slider.nextElementSibling;
             valueDisplay.textContent = slider.value;
         }
+
+        document.getElementById('checkin-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop normal form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/submit_morning_checkin', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text()) // because your Flask returns plain text
+            .then(data => {
+                document.getElementById('prediction-result').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('prediction-result').textContent = "❌ Error submitting check-in.";
+                console.error('Error:', error);
+            });
+        });
     </script>
+</body>
+</html>
+
+wellness_form.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Score Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>🧠 Wellness Score Predictor</h2>
+    <form action="/predict" method="POST">
+        <label for="workload">Workload (1 to 10):</label>
+        <input type="range" id="workload" name="workload" min="1" max="10" value="5">
+        <br>
+
+        <label for="task_complexity">Task Complexity (1 to 5):</label>
+        <input type="range" id="task_complexity" name="task_complexity" min="1" max="5" value="3">
+        <br>
+
+        <label for="break_duration">Break Duration (in minutes):</label>
+        <input type="number" id="break_duration" name="break_duration" min="0" max="240" value="30">
+        <br>
+
+        <label for="overtime">Overtime Hours:</label>
+        <input type="number" id="overtime" name="overtime" min="0" max="10" value="0">
+        <br>
+
+        <button type="submit">Predict Wellness Score</button>
+    </form>
+
+    <div id="prediction-result"></div>
+
+    <script>
+        // Optional: Dynamically update values next to sliders
+        document.getElementById('workload').oninput = function() {
+            document.getElementById('workload_value').innerText = this.value;
+        }
+        document.getElementById('task_complexity').oninput = function() {
+            document.getElementById('task_complexity_value').innerText = this.value;
+        }
+    </script>
+</body>
+</html>
+
+wellness_form.html<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evening Wellness Check-Out</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+        p {
+            font-size: 0.9rem;
+            text-align: center;
+            margin: 5px 0 15px 0;
+            color: #7f8c8d;
+        }
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            color: #34495e;
+        }
+        input[type="range"], input[type="number"] {
+            width: 100%;
+            padding: 8px 0;
+            margin-bottom: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+        }
+        input[type="range"]:hover {
+            background: #3498db;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-value {
+            font-size: 0.8rem;
+            color: #3498db;
+            margin-top: 4px;
+            text-align: right;
+        }
+        button {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+        #prediction-result {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Evening Check-Out 🌙</h2>
+        <p>Reflect on your day and see your wellness score:</p>
+
+        <form id="wellness-form">
+            <label for="workload">Workload (1 to 10):</label>
+            <input type="range" id="workload" name="workload" min="1" max="10" value="5" oninput="updateSliderValue(this)">
+            <div class="slider-value" id="workload-value">5</div>
+
+            <label for="task_complexity">Task Complexity (1 to 5):</label>
+            <input type="range" id="task_complexity" name="task_complexity" min="1" max="5" value="3" oninput="updateSliderValue(this)">
+            <div class="slider-value" id="task_complexity-value">3</div>
+
+            <label for="break_duration">Break Duration (minutes):</label>
+            <input type="number" id="break_duration" name="break_duration" min="0" max="240" value="30">
+
+            <label for="overtime">Overtime Hours:</label>
+            <input type="number" id="overtime" name="overtime" min="0" max="10" value="0">
+
+            <button type="submit">Predict Wellness Score</button>
+        </form>
+
+        <div id="prediction-result"></div>
+    </div>
+
+    <script>
+        function updateSliderValue(slider) {
+            const valueDisplay = document.getElementById(slider.id + "-value");
+            valueDisplay.textContent = slider.value;
+        }
+
+        document.getElementById('wellness-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('prediction-result');
+                if (data["Wellness Score"] !== undefined) {
+                    resultDiv.textContent = "🌟 Your predicted wellness score is: " + data["Wellness Score"];
+                    resultDiv.style.opacity = 1;
+                } else if (data["error"]) {
+                    resultDiv.textContent = "❌ Error: " + data["error"];
+                    resultDiv.style.opacity = 1;
+                }
+            })
+            .catch(error => {
+                const resultDiv = document.getElementById('prediction-result');
+                resultDiv.textContent = "❌ Error predicting score.";
+                resultDiv.style.opacity = 1;
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+
+29.04.25
+dashboard.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wellness Dashboard</title>
+  <style>
+    :root {
+      --primary: #e98973;
+      --secondary: #e7d4c0;
+      --accent: #88b2cc;
+      --support: #658ea9;
+
+      --bg-color: var(--secondary);
+      --text-color: #333;
+      --card-bg: white;
+      --button-bg: var(--primary);
+      --todo-bg: var(--accent);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* ✅ pura page ka scroll disable */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: #e7d4c;
+      color: #008080;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      flex-shrink: 0; /* ✅ navbar ki height fix */
+    }
+    
+
+    .navbar h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    /* Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--support);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Logout Button */
+    .logout-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      overflow: hidden; /* ✅ main ke andar scroll nahi aayega */
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+
+    .button {
+      background-color: var(--button-bg);
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    .todo-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .todo-input input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .todo-input button {
+      padding: 0.5rem 1rem;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .todo-list {
+      margin-top: 1rem;
+      list-style: none;
+      padding-left: 0;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .task-item {
+      background: var(--todo-bg);
+      padding: 0.5rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-item.completed span {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .task-item button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+      color: var(--text-color);
+    }
+
+    /* Chart card */
+    .card:last-child {
+      padding: 0.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain;
+    }
+
+    /* Dark Mode Styles */
+    body.dark {
+      --bg-color: #2d2d2d;
+      --text-color: #f0f0f0;
+      --card-bg: #3a3a3a;
+      --button-bg: #88b2cc;
+      --todo-bg: #555;
+    }
+
+    body.dark .navbar {
+      background-color: #444;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <h1>Hello, {{ user }}!</h1>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+        <span class="slider"></span>
+      </label>
+      <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <h2>🌞 Good Morning, {{ user }}!</h2>
+      <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
+      <p>🕗 8:42 AM • Monday</p>
+      <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">
+        Start Morning CheckIn ➡
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>To-Do List</h2>
+      <div class="todo-input">
+        <input type="text" id="taskInput" placeholder="Add a new task">
+        <button onclick="addTask()">Add</button>
+      </div>
+      <ul class="todo-list" id="taskList"></ul>
+    </div>
+
+    <div class="card">
+      <h2>🌙 Good Evening, {{ user }}!</h2>
+      <p>Take a moment to reflect and log your wellness score</p>
+      <p>🕕 6:42 PM • Monday</p>
+      <button class="button" onclick="window.location.href='/wellness-checkin?user={{ user }}'">
+        Start Evening CheckOut 📝
+      </button>
+    </div>
+
+    <div class="card">
+      <canvas id="wellnessChart"></canvas>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('wellnessChart');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Needs Improvement', 'Healthy'],
+        datasets: [{
+          label: 'Wellness Score',
+          data: [18, 82],
+          backgroundColor: ['#658ea9', '#88b2cc']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskText = taskInput.value.trim();
+      if (taskText === '') return;
+
+      const taskList = document.getElementById('taskList');
+      const li = document.createElement('li');
+      li.className = 'task-item';
+
+      const span = document.createElement('span');
+      span.textContent = taskText;
+
+      const checkBtn = document.createElement('button');
+      checkBtn.innerHTML = '✅';
+      checkBtn.onclick = () => li.classList.toggle('completed');
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.innerHTML = '🗑️';
+      deleteBtn.onclick = () => li.remove();
+
+      li.appendChild(span);
+      li.appendChild(checkBtn);
+      li.appendChild(deleteBtn);
+      taskList.appendChild(li);
+      taskInput.value = '';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
 </body>
 </html>
