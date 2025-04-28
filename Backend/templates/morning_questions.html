@@ -31,10 +31,21 @@
         button {
             padding: 8px 16px;
             font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
         }
         select {
             padding: 5px;
             width: 60%;
+        }
+        #prediction-result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #006400;
+        }
+        .button-group {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -42,7 +53,8 @@
     <h2>Good Morning 👋</h2>
     <p>Let’s start your day with a quick check-in:</p>
 
-    <form action="/submit_morning_checkin" method="POST">
+    <form id="checkin-form">
+        <input type="hidden" name="email" value="{{ user_email }}">
         <ul>
         {% for question in questions %}
             <li>
@@ -60,15 +72,44 @@
             </li>
         {% endfor %}
         </ul>
-        <br>
-        <button type="submit">Submit Check-In</button>
+        
+        <div class="button-group">
+            <button type="submit">Submit Check-In</button>
+            <a href="/dashboard?user={{ user_email }}">
+                <button type="button">Go Back to Dashboard</button>
+            </a>
+            
+        </div>
     </form>
+
+    <div id="prediction-result"></div>
 
     <script>
         function updateSliderValue(slider) {
             const valueDisplay = slider.nextElementSibling;
             valueDisplay.textContent = slider.value;
         }
+
+        document.getElementById('checkin-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop normal form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/submit_morning_checkin', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text()) // because your Flask returns plain text
+            .then(data => {
+                document.getElementById('prediction-result').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('prediction-result').textContent = "❌ Error submitting check-in.";
+                console.error('Error:', error);
+            });
+        });
+
     </script>
 </body>
 </html>

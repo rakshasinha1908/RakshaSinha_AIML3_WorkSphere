@@ -6,82 +6,100 @@
   <title>Wellness Dashboard</title>
   <style>
     :root {
-      --bg-color: #f4f7fa;
-      --sidebar-color: #2d3e50;
-      --text-color: #000; 
+      --primary: #e98973;
+      --secondary: #e7d4c0;
+      --accent: #88b2cc;
+      --support: #658ea9;
+
+      --bg-color: var(--secondary);
+      --text-color: #333;
       --card-bg: white;
-      --button-bg: #c89b65;
-      --todo-bg: #f0f0f0;
+      --button-bg: var(--primary);
+      --todo-bg: var(--accent);
     }
 
-    body.dark {
-      --bg-color: #1f1f1f;
-      --sidebar-color: #121212;
-      --text-color: #fff;
-      --card-bg: #2b2b2b;
-      --button-bg: #8e6b3d;
-      --todo-bg: #333;
-    }
-
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
+      overflow: hidden; /* ✅ pura page ka scroll disable */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       display: flex;
-      height: 100vh;
-      overflow: hidden; /* prevent scrolling */
-    }
-
-    .sidebar {
-      width: 24%;
-      background-color: var(--sidebar-color);
-      color: white;
-      padding: 1.8rem;
-      display: flex;
       flex-direction: column;
-      align-items: center;
-      box-sizing: border-box;
     }
 
-    .sidebar img {
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar h1 {
-      font-size: 22px;
-    }
-
-    .sidebar p {
-      margin: 4px 0;
-    }
-
-    .mood-icons {
+    .navbar {
+      background-color: #e7d4c;
+      color: #008080;
       display: flex;
-      margin-top: 1rem;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      flex-shrink: 0; /* ✅ navbar ki height fix */
+    }
+    
+
+    .navbar h1 {
+      font-size: 1.8rem;
+      margin: 0;
     }
 
-    .mood-icons span {
-      font-size: 22px;
+    /* Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
       cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
     }
 
-    .dark-toggle {
-      margin-top: 1rem;
-      background: #ffffff20;
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--support);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Logout Button */
+    .logout-button {
+      background-color: var(--primary);
       color: white;
-      border: 1px solid white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     .main {
@@ -90,35 +108,36 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 1rem;
-      padding: 1.8rem;
-      box-sizing: border-box;
+      padding: 1rem;
+      overflow: hidden; /* ✅ main ke andar scroll nahi aayega */
     }
 
     .card {
       background: var(--card-bg);
       border-radius: 12px;
-      padding: 1.2rem;
+      padding: 1rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
     }
 
     .card h2 {
       margin-top: 0;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     .button {
       background-color: var(--button-bg);
       color: white;
-      padding: 0.6rem 1.2rem;
+      padding: 0.7rem 1.2rem;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 0.95rem;
-      margin-top: 0.8rem;
+      font-size: 1rem;
+      margin-top: 1rem;
     }
 
     .todo-input {
@@ -136,7 +155,7 @@
 
     .todo-input button {
       padding: 0.5rem 1rem;
-      background-color: var(--sidebar-color);
+      background-color: var(--accent);
       color: white;
       border: none;
       border-radius: 6px;
@@ -148,7 +167,7 @@
       list-style: none;
       padding-left: 0;
       overflow-y: auto;
-      max-height: 120px;
+      flex-grow: 1;
     }
 
     .task-item {
@@ -175,9 +194,9 @@
       color: var(--text-color);
     }
 
+    /* Chart card */
     .card:last-child {
       padding: 0.5rem;
-      overflow: hidden;
       align-items: center;
       justify-content: center;
     }
@@ -185,32 +204,48 @@
     canvas {
       width: 100% !important;
       height: 100% !important;
+      max-height: 100% !important;
       object-fit: contain;
+    }
+
+    /* Dark Mode Styles */
+    body.dark {
+      --bg-color: #2d2d2d;
+      --text-color: #f0f0f0;
+      --card-bg: #3a3a3a;
+      --button-bg: #88b2cc;
+      --todo-bg: #555;
+    }
+
+    body.dark .navbar {
+      background-color: #444;
+      color: white;
     }
   </style>
 </head>
-<body>
-  <div class="sidebar">
-    <h1>Hello, {{ user }}!</h1>
 
-    <img src="static/profile.jpg" alt="User Photo" />
-    <p>SWE - III</p>
-    <p>IT DEPARTMENT</p>
-    <p>How are you feeling today?</p>
-    <div class="mood-icons">
-      <span>😀</span><span>🙂</span><span>😐</span><span>☹</span><span>😢</span>
+<body>
+  <div class="navbar">
+    <h1>Hello, {{ user }}!</h1>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+        <span class="slider"></span>
+      </label>
+      <button class="logout-button" onclick="window.location.href='/logout'">Logout</button>
     </div>
-    <button class="dark-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
   </div>
-  
+
   <div class="main">
     <div class="card">
       <h2>🌞 Good Morning, {{ user }}!</h2>
       <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
       <p>🕗 8:42 AM • Monday</p>
-      <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">Start Morning CheckIn ➡</button>
-
+      <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">
+        Start Morning CheckIn ➡
+      </button>
     </div>
+
     <div class="card">
       <h2>To-Do List</h2>
       <div class="todo-input">
@@ -219,6 +254,7 @@
       </div>
       <ul class="todo-list" id="taskList"></ul>
     </div>
+
     <div class="card">
       <h2>🌙 Good Evening, {{ user }}!</h2>
       <p>Take a moment to reflect and log your wellness score</p>
@@ -227,6 +263,7 @@
         Start Evening CheckOut 📝
       </button>
     </div>
+
     <div class="card">
       <canvas id="wellnessChart"></canvas>
     </div>
@@ -242,7 +279,7 @@
         datasets: [{
           label: 'Wellness Score',
           data: [18, 82],
-          backgroundColor: ['#397ca7', '#8cd3f8']
+          backgroundColor: ['#658ea9', '#88b2cc']
         }]
       },
       options: {

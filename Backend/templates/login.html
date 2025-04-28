@@ -1,23 +1,61 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Login | WorkSphere</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-  <h2>Welcome to WorkSphere</h2>
-  <form action="{{ url_for('login') }}" method="POST">  <!-- ✅ FIXED -->
-    <label for="email">Email:</label>
-    <input type="email" name="email" required>
-    
-    <label for="password">Password:</label>   <!-- ✅ PASSWORD bhi chahiye -->
-    <input type="password" name="password" required>
-    
-    <button type="submit">Login</button>
-  </form>
+<html lang="en">
 
-  <p>Don't have an account? <a href="/register">Register here</a></p>
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Login | WorkSphere</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#2a7d7a] flex items-center justify-center p-4">
+  <div class="relative w-full max-w-4xl h-[400px] flex shadow-2xl rounded-md bg-white overflow-hidden">
+    <!-- Left side with image and curved shape -->
+    <div class="relative w-1/2 bg-[#2a7d7a] flex items-center justify-center">
+      <img alt="Simple office interior, modern workspace with plants and desks" class="absolute inset-0 w-full h-full object-cover opacity-30" height="400" src="{{ url_for('static', filename='loginimage.png') }}" width="600"/>
+      <svg class="absolute right-0 top-0 h-full" fill="none" height="400" viewbox="0 0 80 400" width="80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80 0C40 100 40 300 80 400V0Z" fill="white"></path>
+      </svg>
+    </div>
+    <!-- Right side with form -->
+    <div class="w-1/2 bg-white flex flex-col justify-center px-12 py-10 relative z-10">
+      <h1 class="text-3xl font-normal text-gray-700 mb-2">
+        Welcome to WorkSphere
+      </h1> 
+      <p class="text-sm text-gray-400 mb-8">
+        Log in to your account to continue      
+      </p>
+      <form action="{{ url_for('login') }}" method="POST" class="space-y-6">
+        <div class="relative">
+          <input class="w-full border border-gray-300 rounded-full py-3 pl-12 pr-4 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2a7d7a]" placeholder="worksphere@user.com" type="email" name="email" required />
+          <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <div class="relative">
+          <input class="w-full border border-gray-300 rounded-full py-3 pl-12 pr-4 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2a7d7a]" placeholder="••••••••••••••" type="password" name="password" required />
+          <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <button class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-300 hover:text-gray-400 focus:outline-none" tabindex="-1" type="button">
+            Forgot your password?
+          </button>
+        </div>
+        <button class="w-32 mx-auto block bg-[#2ac1b8] text-white rounded-full py-2 text-sm hover:bg-[#27b0a8] transition-colors" type="submit">
+          Log In
+        </button>
+      </form>
+      <p class="text-xs text-gray-400 mt-8 text-center">
+        Don’t have an account? <a class="underline hover:text-gray-600" href="/register">Sign up!</a>
+      </p>
+    </div>
+  </div>
 
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>

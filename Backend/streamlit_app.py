@@ -1,27 +1,3 @@
-# import streamlit as st
-# import requests
-
-# st.title("Employee Wellness Score Predictor")
-
-# workload = st.slider("Workload (Tasks Completed)", 1, 20, 10)
-# task_complexity = st.slider("Task Complexity (1-10)", 1, 10, 5)
-# break_duration = st.slider("Total Break Duration (mins)", 0, 120, 30)
-# overtime = st.slider("Overtime (mins)", 0, 180, 60)
-
-# if st.button("Predict Wellness Score"):
-#     data = {
-#         "Workload": workload,
-#         "Task Complexity": task_complexity,
-#         "Break Duration (mins)": break_duration,  # ✅ FIXED
-#         "Overtime Hours": overtime                 # ✅ FIXED
-#     }
-    
-#     response = requests.post("http://127.0.0.1:5001/predict", json=data)
-#     score = response.json()["Wellness Score"]
-    
-#     st.write(f"Predicted Wellness Score: {score}/100")
-
-
 import streamlit as st
 import requests
 
@@ -46,16 +22,29 @@ if st.button("🔮 Predict Wellness Score"):
     }
 
     try:
+        # Send data to Flask's /predict endpoint
         response = requests.post("http://127.0.0.1:5001/predict", json=data)
 
-        # Show raw error if any
+        # Show error message if something went wrong
         if response.status_code != 200:
             st.error(f"❌ Error {response.status_code}: {response.text}")
         else:
+            # Get the wellness score from the response
             result = response.json()
-            score = result["Wellness Score"]
-            st.success(f"✅ Your predicted Wellness Score is: **{score}/100**")
+            wellness_score = result["Wellness Score"]
+            st.success(f"✅ Your predicted Wellness Score is: **{wellness_score}/100**")
+
+            # Now, send the wellness score as the mental score to Flask's /submit_mental_score endpoint
+            mental_score_data = {"mental_score": wellness_score}
+
+            # Send the mental score to Flask
+            mental_score_response = requests.post("http://127.0.0.1:5001/submit_mental_score", json=mental_score_data)
+
+            # Check if the mental score was successfully recorded
+            if mental_score_response.status_code == 200:
+                st.success("✅ Your mental score has been successfully recorded.")
+            else:
+                st.error(f"❌ Error in submitting mental score: {mental_score_response.text}")
     
     except requests.exceptions.RequestException as e:
         st.error(f"⚠️ Failed to connect to backend: {e}")
-
