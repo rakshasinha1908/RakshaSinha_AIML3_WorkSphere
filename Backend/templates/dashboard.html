@@ -172,11 +172,12 @@
       list-style: none;
       padding-left: 0;
       overflow-y: auto;
-      flex-grow: 1;
-      min-height: 0;
+      max-height: calc(3 * 3.2rem); /* show ~3 tasks before scroll */
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
     }
+    
+    
     .todo-list::-webkit-scrollbar {
       width: 6px;
     }
@@ -193,6 +194,7 @@
       justify-content: space-between;
       align-items: center;
     }
+    
     .task-item.completed span {
       text-decoration: line-through;
       opacity: 0.6;
@@ -301,14 +303,14 @@ body.dark .fc-day-today {
       <div class="card">
         <h2>🌞 Good Morning, {{ user }}!</h2>
         <p>Your mind matters – even 2 minutes can make a difference 🌞</p>
-        <p>🕗 8:42 AM • Monday</p>
+        <p id="morning-time">🕗 --:-- -- • ----</p>
         <button class="button" onclick="window.location.href='/morning-checkin?user={{ user }}'">Start Morning CheckIn 📝</button>
       </div>
 
       <div class="card">
         <h2>🌙 Good Evening, {{ user }}!</h2>
         <p>Take a moment to reflect and log your wellness score</p>
-        <p>🕕 6:42 PM • Monday</p>
+        <p id="evening-time">🕕 --:-- -- • ----</p>
         <button class="button" onclick="window.location.href='/wellness-checkin?user={{ user }}'">Start Evening CheckOut 📝</button>
       </div>
     </div>
@@ -341,6 +343,19 @@ body.dark .fc-day-today {
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
   <script>
+    function updateTime() {
+      const now = new Date();
+  
+      const options = { hour: 'numeric', minute: 'numeric', hour12: true, weekday: 'long' };
+      const timeString = now.toLocaleTimeString('en-US', options);
+  
+      document.getElementById('morning-time').textContent = `🕗 ${timeString}`;
+      document.getElementById('evening-time').textContent = `🕕 ${timeString}`;
+    }
+  
+    updateTime();
+    setInterval(updateTime, 60000); // Har 1 minute baad time update hota rahe
+    
     const ctx = document.getElementById('wellnessChart');
     new Chart(ctx, {
       type: 'pie',
