@@ -1,9 +1,6 @@
 
 ---
 
-```markdown
----
-
 # WorkSphere
 
 **WorkSphere** is a comprehensive web-based platform designed to enhance workplace wellness and productivity. By integrating AI-driven sentiment analysis, task management, and wellness tracking, WorkSphere aims to create a balanced and efficient work environment for teams and individuals.
@@ -19,8 +16,6 @@ WorkSphere addresses the growing need for mental well-being and efficient task m
 - **Wellness Tracking**: Monitors user activities and provides insights to promote healthier work habits.
 
 By combining these features, WorkSphere fosters a supportive and productive workspace.
-
----
 
 ---
 
@@ -79,8 +74,8 @@ Follow these steps to set up and run the WorkSphere project locally:
 ---
 
 ## 🎥 Video Presentation
-
 https://drive.google.com/file/d/1fmInyr_q7ZnT5nb1sHpRdoNpN4CwIumH/view?usp=drive_link
+
 
 ---
 
@@ -91,11 +86,3 @@ https://drive.google.com/file/d/1fmInyr_q7ZnT5nb1sHpRdoNpN4CwIumH/view?usp=drive
 - **Meenakshi** (2301730200)
 
 ---
-```
-
----
-
-
-```markdown
-![Login Page](./static/im1.png)
-```
