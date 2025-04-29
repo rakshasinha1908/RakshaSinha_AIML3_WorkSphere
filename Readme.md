@@ -22,23 +22,6 @@ By combining these features, WorkSphere fosters a supportive and productive work
 
 ---
 
-## 🖼️ Application Screenshots
-
-1. **Login Page**  
-   ![Login Page](./static/im1.png)
-
-2. **Register Page**  
-   ![Register Page](./static/im2.png)
-
-3. **User Dashboard**  
-   ![User Dashboard](./static/im3.png)
-
-4. **Morning Check-In Questions**  
-   ![Morning Check-In](./static/im4)
-
-5. **Evening Check-Out Questions**  
-   ![Evening Check-Out](./static/im5)
-
 ---
 
 ## 🚀 Technologies Used
@@ -97,7 +80,7 @@ Follow these steps to set up and run the WorkSphere project locally:
 
 ## 🎥 Video Presentation
 
-*A demonstration video showcasing the features and functionalities of WorkSphere will be available soon.*
+https://drive.google.com/file/d/1fmInyr_q7ZnT5nb1sHpRdoNpN4CwIumH/view?usp=drive_link
 
 ---
 
