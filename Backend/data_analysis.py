@@ -1,32 +1,3 @@
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-
-# # Dataset load karna
-# df = pd.read_csv("D:\WorkSphere\dataset\data.csv")
-
-# # Dataset ki basic info dekhna
-# print(df.head())      # Pehle 5 rows dekho
-# print(df.info())      # Columns aur data types dekho
-# print(df.isnull().sum())  # Missing values check karo
-
-# # Dataset ka summary statistics
-# print(df.describe())
-
-# # Missing values ko visualize karna
-# plt.figure(figsize=(10,5))
-# sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
-# plt.show()
-
-# print(df.columns)  # Sabhi column ke names dekhne ke liye
-# print(df.dtypes)   # Data types check karne ke liye
-
-
-# # ✅ Correlation Matrix
-# plt.figure(figsize=(10,6))
-# sns.heatmap(df.corr(), annot=True, cmap="coolwarm", linewidths=0.5)
-# plt.title("Feature Correlation Heatmap")
-# plt.show()
 
 
 import pandas as pd
@@ -142,37 +113,5 @@ predicted_score = model.predict(example)
 print(f"Predicted Wellness Score: {predicted_score[0]:.2f}")
 
 
-# from flask import Flask, request, jsonify
-# import numpy as np
 
-# app = Flask(__name__)
-
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     data = request.json
-#     input_data = np.array([[data["Workload"], data["Task Complexity"], 
-#                             data["Break Duration"], data["Overtime"]]])
-#     predicted_score = model.predict(input_data)[0]
-#     return jsonify({"Wellness Score": round(predicted_score, 2)})
-
-# if __name__ == '__main__':
-#     app.run(debug=False)
-
-# import streamlit as st
-
-# st.title("Employee Wellness Score Predictor")
-
-# workload = st.slider("Workload (Tasks Completed)", 1, 20, 10)
-# task_complexity = st.slider("Task Complexity (1-10)", 1, 10, 5)
-# break_duration = st.slider("Total Break Duration (mins)", 0, 120, 30)
-# overtime = st.slider("Overtime (mins)", 0, 180, 60)
-
-# if st.button("Predict Wellness Score"):
-#     data = {"Workload": workload, "Task Complexity": task_complexity, 
-#             "Break Duration": break_duration, "Overtime": overtime}
-    
-#     response = requests.post("http://127.0.0.1:5000/predict", json=data)
-#     score = response.json()["Wellness Score"]
-    
-#     st.write(f"Predicted Wellness Score: {score}/100")
 

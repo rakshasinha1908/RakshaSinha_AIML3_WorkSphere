@@ -76,6 +76,11 @@ Follow these steps to set up and run the WorkSphere project locally:
 ## 🎥 Video Presentation
 https://drive.google.com/file/d/1fmInyr_q7ZnT5nb1sHpRdoNpN4CwIumH/view?usp=drive_link
 
+## 🎥 Final Presentation
+https://docs.google.com/presentation/d/19mwIh4hpvw8dRQdQ236ApKSS5GLYPGlh/edit?usp=sharing&ouid=115405120319333098493&rtpof=true&sd=true
+
+## 🎥 Certificate
+https://drive.google.com/file/d/1up5hs9SvOW61nm1ctxgh7-Z0lq_XQBTz/view?usp=drivesdk
 
 ---
 
